@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+
+# Custom binaries
+*.pdf
+BLAS
+CBLAS
+LAPACK
+ScaLAPACK
+matrixmultiply

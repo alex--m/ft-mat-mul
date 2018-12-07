@@ -1,2 +1,3 @@
-# ft-mat-mul
-Fault-tolerant matrix multiplication research
+# Fault-tolerant matrix multiplication research
+
+TODO: implement fault-tolernace...
