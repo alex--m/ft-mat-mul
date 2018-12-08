@@ -37,4 +37,5 @@ BLAS
 CBLAS
 LAPACK
 ScaLAPACK
+ftla-rSC13
 matrixmultiply

@@ -63,3 +63,9 @@ pushd benchmark
 mpicxx *.cpp $(SCALAPACK) $(LAPACK) $(CBLAS) $(BLAS) -l$(FORT) -o matrixmultiply
 mpirun matrixmultiply
 popd
+
+# FT-LA (by UTK's ICL group)
+# ==========================
+wget http://icl.cs.utk.edu/projectsfiles/ft-la/software/ftla-rSC13.tgz
+tar -xzf ftla-rSC13.tgz
+cd ftla-rSC13

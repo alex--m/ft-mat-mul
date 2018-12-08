@@ -1,3 +1,5 @@
 # Fault-tolerant matrix multiplication research
 
-TODO: implement fault-tolernace...
+For presenting, go to [git-pitch](https://gitpitch.com/alex--m/ft-mat-mul/master)
+For details on git-pitch, see the complete template documentation [here](https://gitpitch.com/docs/the-template).
+
