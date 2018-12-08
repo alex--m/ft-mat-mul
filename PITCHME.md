@@ -2,11 +2,11 @@
 @title[Introduction]
 
 @snap[west text-25 text-bold text-white]
-GitPitch<br>*The Template*
+Fault-tolerant Matrix Multiplication<br>*ABFT in action!*
 @snapend
 
 @snap[south-west byline text-white text-06]
-The Fastest Way From Idea To Presentation.
+Alex Margolin, HUJI, Dec. 2018
 @snapend
 
 ---

@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# This script downloads and builds the required packages.
+# If the packages are already built, try running the following:
+#> cat build.sh | egrep "(cd|export)"
+
 set -e
 echo "Please make sure MPI executables are in PATH..."
 which mpicc
@@ -9,63 +14,39 @@ which mpirun
 export FORT=gfortran
 which $(FORT)
 
-# BLAS
-# ====
-wget http://www.netlib.org/blas/blas.tgz
-tar xzvf blas.tgz
-mv BLAS-* BLAS
-pushd BLAS
-make -j
-export BLAS=`pwd`/blas_LINUX.a
-popd
-
-# CBLAS
-# =====
-http://www.netlib.org/blas/blast-forum/cblas.tgz
-tar xzvf cblas.tgz
-pushd CBLAS
-cp Makefile.LINUX Makefile.in
-echo "BLLIB = \$(BLAS)" >> Makefile.in
-make -j
-export CBLAS=`pwd`/lib/cblas_LINUX.a
-popd
-
-# LAPACK
-# ======
-svn co https://icl.cs.utk.edu/svn/lapack-dev/lapack/trunk && mv trunk LAPACK
-pushd LAPACK
-cp INSTALL/make.inc.$(FORT) make.inc
-echo "BLASLIB=\$(BLAS)" >> make.inc
-echo "CBLASLIB=\$(CBLAS)" >> make.inc
-make -j lapacklib
-make clean
-export LAPACK=`pwd`/liblapack.a
-popd
-
+# OpenBLAS
+# ========
+git clone https://github.com/xianyi/OpenBLAS.git
+cd OpenBLAS
+make FC=$(FORT) -j
+export OPENBLAS=`pwd`/libopenblas.a
+cd ..
 
 # ScaLAPACK
 # =========
 # *assumes MPI availability, preferably built with the same ifort:
 # 	CC=icc FC=ifort F77=ifort CXX=icpc ./configure
 svn co https://icl.cs.utk.edu/svn/scalapack-dev/scalapack/trunk && mv trunk ScaLAPACK
-pushd ScaLAPACK
+cd ScaLAPACK
 cp SLmake.inc.example SLmake.inc
-echo "BLASLIB=\$(BLAS)" >> SLmake.inc
-echo "LAPACKLIB=\$(LAPACK)" >> SLmake.inc
+echo "BLASLIB=\$(OPENBLAS)" >> SLmake.inc
+echo "LAPACKLIB=\$(OPENBLAS)" >> SLmake.inc
 make
 export SCALAPACK=`pwd`/libscalapack.a
-popd
-
+cd ..
 
 # Benchmark
 # =========
-pushd benchmark
-mpicxx *.cpp $(SCALAPACK) $(LAPACK) $(CBLAS) $(BLAS) -l$(FORT) -o matrixmultiply
+cd benchmark
+mpicxx *.cpp $SCALAPACK $OPENBLAS -l$FORT -o matrixmultiply
 mpirun matrixmultiply
-popd
+cd ..
 
 # FT-LA (by UTK's ICL group)
 # ==========================
 wget http://icl.cs.utk.edu/projectsfiles/ft-la/software/ftla-rSC13.tgz
 tar -xzf ftla-rSC13.tgz
 cd ftla-rSC13
+sed -i.bak "s/-lscalapack -llapack -lgotoblas2/\$(SCALAPACK) \$(OPENBLAS)/" Makefile
+make
+cd ..

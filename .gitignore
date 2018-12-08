@@ -32,10 +32,8 @@
 *.app
 
 # Custom binaries
-*.pdf
-BLAS
-CBLAS
-LAPACK
+PDFs
+OpenBLAS
 ScaLAPACK
 ftla-rSC13
 matrixmultiply
